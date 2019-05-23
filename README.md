@@ -17,7 +17,7 @@ go build -o eniro-search main.go eniro.go
 ./eniro-search
 ```
 
-p.s. you can specify a http parameter to the commandline, like 
+P.S. you can specify a http parameter to the commandline, like 
 ```
 ./eniro-search -http=:8081
 ```
@@ -38,7 +38,7 @@ please check [https://qieruzhengde.appspot.com/search?q=suzhi&include=companyInf
 ### Frondend
 Frontend is using React and React Hooks for state management
 
-check the repo
+check the [repo](https://github.com/wilbyang/eniro-search-client)
 
 ## Author
 yang.wilby@gmail.com
