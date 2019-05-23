@@ -12,7 +12,7 @@ check [Golang installation](https://golang.org/doc/install)
 go build -o eniro-search main.go eniro.go
 ```
 
-2. run
+2. run locally
 ```
 ./eniro-search
 ```
@@ -21,6 +21,10 @@ p.s. you can specify a http parameter to the commandline, like
 ```
 ./eniro-search -http=:8081
 ```
+
+### Help
+if you can not run the project locally for some resone, I have deployed to Google Coud Appengine
+please check [https://qieruzhengde.appspot.com/search?q=suzhi&include=companyInfo,location,address](https://qieruzhengde.appspot.com/search?q=suzhi&include=companyInfo,location,address) for playground
 
 ### Features
 1. search
