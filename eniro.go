@@ -14,64 +14,29 @@ import (
 	"net/http"
 )
 
-const baseURL = "https://api.eniro.com/partnerapi/cs/search/basic"
+const baseURL = "https://api.eniro.com/api/v2.0/SE/search"
 
 type Result struct {
-	Title        string    `json:"title"`
-	Query        string    `json:"query"`
-	TotalHits    uint32    `json:"totalHits"`
-	TotalCount   uint32    `json:"totalCount"`
-	StartIndex   uint32    `json:"startIndex"`
-	ItemsPerPage uint16    `json:"itemsPerPage"`
-	Adverts      []Advert2 `json:"adverts"`
+	Companies []struct {
+		EniroID string `json:"eniroId"`
+		Name    string `json:"name"`
+		Phones  []struct {
+			Number string `json:"number"`
+			Text   string `json:"text"`
+		} `json:"phones"`
+		ProfilePageLink string `json:"profilePageLink"`
+		Addresses       []struct {
+			PostalCode   string `json:"postalCode"`
+			StreetName   string `json:"streetName"`
+			StreetNumber string `json:"streetNumber"`
+			PostalArea   string `json:"postalArea"`
+		} `json:"addresses"`
+	} `json:"companies"`
+	SearchLevel string `json:"searchLevel"`
+	Hits        struct {
+		Companies int `json:"companies"`
+	} `json:"hits"`
 }
-
-// use map to make it possible to do json serialization projection
-// check here
-// https://stackoverflow.com/questions/17306358/removing-fields-from-struct-or-hiding-them-in-json-response
-type Advert2 map[string]interface{}
-
-type Advert struct {
-	EniroId        string       `json:"eniroId"`
-	CompanyInfo    CompanyInfo  `json:"companyInfo"`
-	Address        Address      `json:"address"`
-	Location       Location     `json:"location"`
-	PhoneNumbers   PhoneNumbers `json:"phoneNumbers"`
-	CompanyReviews string       `json:"companyReviews"`
-	Homepage       string       `json:"homepage"`
-	Facebook       string       `json:"facebook"`
-	InfoPageLink   string       `json:"infoPageLink"`
-}
-
-type CompanyInfo struct {
-	CompanyName string `json:"companyName"`
-	OrgNumber   string `json:"orgNumber"`
-	CompanyText string `json:"companyText"`
-}
-
-type Address struct {
-	StreetName string `json:"streetName"`
-	PostCode   string `json:"postCode"`
-	PostArea   string `json:"postArea"`
-	PostBox    string `json:"postBox"`
-}
-
-type Coordinate struct {
-	Use       string  `json:"use"`
-	Longitude float32 `json:"longitude"`
-	Latitude  float64 `json:"latitude"`
-}
-type Coordinates []Coordinate
-
-type Location struct {
-	Coordinates Coordinates `json:"coordinates"`
-}
-type PhoneNumber struct {
-	Kind        string `json:"type"`
-	PhoneNumber string `json:"phoneNumber"`
-	Label       string `json:"label"`
-}
-type PhoneNumbers []PhoneNumber
 
 // Search sends query to Eniro search and returns the result.
 func Search(ctx context.Context, query string) (Result, error) {
@@ -83,11 +48,8 @@ func Search(ctx context.Context, query string) (Result, error) {
 		return Result{}, err
 	}
 	q := req.URL.Query()
-	q.Set("profile", "interview")
-	q.Set("key", "114773894699415832")
-	q.Set("country", "se")
-	q.Set("version", "1.1.3")
-	q.Set("search_word", query)
+	req.Header.Set("Authorization", "Basic eWFuZy53aWxieUBnbWFpbC5jb206RUlzcjR3VUtZZ0FiQ203YVF3UWN4N2VfNHRSNFBxOFBPM2JlcnBlS0V0QQ==")
+	q.Set("query", query)
 
 	req.URL.RawQuery = q.Encode()
 
