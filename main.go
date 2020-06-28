@@ -15,7 +15,6 @@ import (
 	"flag"
 	"log"
 	"net/http"
-	"strings"
 	"time"
 )
 
@@ -26,6 +25,8 @@ var (
 func main() {
 	flag.Parse()
 	http.HandleFunc("/search", handleSearch)
+	fs := http.FileServer(http.Dir("./static"))
+	http.Handle("/", fs)
 	log.Fatal(http.ListenAndServe(*listenAddr, nil))
 }
 
@@ -52,8 +53,6 @@ func handleSearch(w http.ResponseWriter, req *http.Request) {
 
 	// Check the search query.
 	query := req.FormValue("q")
-	includes := req.FormValue("include")
-	includesSlice := strings.Split(includes, ",")
 	if query == "" {
 		http.Error(w, "no query", http.StatusBadRequest)
 		return
@@ -67,7 +66,6 @@ func handleSearch(w http.ResponseWriter, req *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	jsonProjection(&result, includesSlice)
 
 	var ret = struct {
 		Result           Result
@@ -80,21 +78,5 @@ func handleSearch(w http.ResponseWriter, req *http.Request) {
 	if err := json.NewEncoder(w).Encode(ret); err != nil {
 		log.Print(err)
 		return
-	}
-}
-
-func jsonProjection(result *Result, includes []string) {
-	excludes := map[string]bool{"companyInfo": true, "address": true, "location": true, "phoneNumbers": true,
-		"companyReviews": true, "homepage": true, "facebook": true, "infoPageLink": true}
-
-	for _, include := range includes {
-		delete(excludes, include)
-	}
-
-	for _, advert := range result.Adverts {
-		for exclude, _ := range excludes {
-
-			delete(advert, exclude)
-		}
 	}
 }

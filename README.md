@@ -22,23 +22,17 @@ P.S. you can specify a http parameter to the commandline, like
 ./eniro-search -http=:8081
 ```
 
-### Help
-if you can not run the project locally for some resone, I have deployed to Google Coud Appengine
-please check [https://qieruzhengde.appspot.com/search?q=suzhi&include=companyInfo,location,address](https://qieruzhengde.appspot.com/search?q=suzhi&include=companyInfo,location,address) for playground
-
 ### Features
 1. search
  
 2. timeout
 
 
-3. fields filtering
-
 
 ### Frondend
 Frontend is using React and React Hooks for state management
 
-check the [repo](https://github.com/wilbyang/eniro-search-client)
+check the [repo](https://github.com/wilbyang/eniro-search-ng-client)
 
 ## Author
 yang.wilby@gmail.com
